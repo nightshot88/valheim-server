@@ -1,29 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "=== Setting up permissions ==="
+GAME_DIR=/home/valheim/valheim-server
 
-# Fix permissions on mounted volumes if they exist
-if [ -d "/data" ]; then
-    chown -R 1000:1000 /data || true
-fi
-
-# Create necessary directories
-mkdir -p /home/valheim/.config/unity3d/IronGate/Valheim
-chown -R 1000:1000 /home/valheim/.config
-
-echo "=== Checking/Installing Valheim version ==="
-steamcmd +force_install_dir /home/valheim/valheim-server \
+echo "=== Checking/Installing latest Valheim version ==="
+steamcmd +force_install_dir ${GAME_DIR} \
          +login anonymous \
          +app_update 896660 validate \
          +quit
 
 echo "=== Starting Valheim Dedicated Server ==="
 
-cd /home/valheim/valheim-server
-exec su -c './valheim_server.x86_64 -name "${SERVER_NAME}" \
+cd ${GAME_DIR}
+exec ./valheim_server.x86_64 -name "${SERVER_NAME}" \
      -port ${SERVER_PORT} \
      -world "${WORLD_NAME}" \
      -password "${SERVER_PASSWORD}" \
      -crossplay ${CROSSPLAY:-false} \
-     -public ${PUBLIC:-1}' valheim
+     -public ${PUBLIC:-1}
