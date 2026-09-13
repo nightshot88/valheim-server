@@ -9,6 +9,11 @@ steamcmd +force_install_dir ${GAME_DIR} \
          +app_update 896660 validate \
          +quit
 
+# Steam-API-Bibliotheken in GAME_DIR symlinken (falls nicht vorhanden)
+if [ ! -f "${GAME_DIR}/steam_api64.so" ]; then
+    ln -sf /home/valheim/.local/share/Steam/ubuntu12_64/steam_api64.so ${GAME_DIR}/steam_api64.so
+fi
+
 echo "=== Starting Valheim Dedicated Server ==="
 
 cd ${GAME_DIR}
