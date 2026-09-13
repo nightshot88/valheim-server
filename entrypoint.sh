@@ -5,12 +5,12 @@ echo "=== Setting up permissions ==="
 
 # Fix permissions on mounted volumes if they exist
 if [ -d "/data" ]; then
-    chown -R valheim:valheim /data || true
+    chown -R 1500:1500 /data || true
 fi
 
 # Create necessary directories
 mkdir -p /home/valheim/.config/unity3d/IronGate/Valheim
-chown -R valheim:valheim /home/valheim/.config
+chown -R 1500:1500 /home/valheim/.config
 
 echo "=== Checking/Installing Valheim version ==="
 steamcmd +force_install_dir /home/valheim/valheim-server \
