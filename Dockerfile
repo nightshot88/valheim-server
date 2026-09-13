@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Create valheim user with fixed UID/GID (Linux default)
-RUN groupadd -g 1000 valheim && \
-    useradd -m -u 1000 -g 1000 valheim
+# Create valheim user with custom UID/GID to avoid conflicts
+RUN groupadd -g 1500 valheim && \
+    useradd -m -u 1500 -g 1500 valheim
 
 # Create game directory and set permissions
 WORKDIR /home/valheim
