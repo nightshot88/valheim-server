@@ -3,14 +3,14 @@ name: Build and Publish Docker Image
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # erlaubt manuelles Auslösen per Klick
+  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write   # nötig, um nach GHCR pushen zu dürfen
+      packages: write
 
     steps:
       - name: Checkout
