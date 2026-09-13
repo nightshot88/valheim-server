@@ -2,6 +2,7 @@
 set -e
 
 GAME_DIR=/home/valheim/valheim-server
+STEAM_SDK=${HOME}/.local/share/Steam
 
 echo "=== Checking/Installing latest Valheim version ==="
 steamcmd +force_install_dir ${GAME_DIR} \
@@ -9,9 +10,13 @@ steamcmd +force_install_dir ${GAME_DIR} \
          +app_update 896660 validate \
          +quit
 
-# Steam-API-Bibliotheken in GAME_DIR symlinken (falls nicht vorhanden)
-if [ ! -f "${GAME_DIR}/steam_api64.so" ]; then
-    ln -sf /home/valheim/.local/share/Steam/ubuntu12_64/steam_api64.so ${GAME_DIR}/steam_api64.so
+echo "=== Linking Steam SDK for server API ==="
+mkdir -p ${HOME}/.steam/sdk64
+if [ -f "${STEAM_SDK}/linux64/steamclient.so" ]; then
+    cp -f ${STEAM_SDK}/linux64/steamclient.so ${HOME}/.steam/sdk64/steamclient.so
+    echo "steamclient.so copied to ~/.steam/sdk64/"
+else
+    echo "WARNING: ${STEAM_SDK}/linux64/steamclient.so not found!"
 fi
 
 echo "=== Starting Valheim Dedicated Server ==="
