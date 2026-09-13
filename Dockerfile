@@ -4,17 +4,12 @@ FROM steamcmd/steamcmd:ubuntu
 RUN apt-get update && apt-get install -y --no-install-recommends \
     lib32gcc-s1 \
     libc6 \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Create valheim user with fixed UID/GID
-ARG USER_ID=1000
-ARG GROUP_ID=1000
-RUN groupadd -g ${GROUP_ID} valheim && \
-    useradd -m -u ${USER_ID} -g ${GROUP_ID} valheim
-
-# Install dependencies
-RUN apt-get update && apt-get install -y wget && \
-    rm -rf /var/lib/apt/lists/*
+# Create valheim user with fixed UID/GID (Linux default)
+RUN groupadd -g 1000 valheim && \
+    useradd -m -u 1000 -g 1000 valheim
 
 # Create game directory and set permissions
 WORKDIR /home/valheim
