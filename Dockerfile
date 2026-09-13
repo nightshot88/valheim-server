@@ -1,30 +1,26 @@
 FROM steamcmd/steamcmd:ubuntu
 
-# Dependencies for Valheim Server
 RUN apt-get update && apt-get install -y --no-install-recommends \
     lib32gcc-s1 \
     libc6 \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Create valheim user with custom UID/GID to avoid conflicts
-RUN groupadd -g 1000 valheim && \
-    useradd -m -u 1000 -g 1000 valheim
+# Basis-Image hat bereits einen User mit UID 1000 - wir legen KEINEN neuen an,
+# sondern nutzen die ID direkt numerisch (USER 1000:1000 weiter unten)
 
-# Create game directory and set permissions
-WORKDIR /home/valheim
-RUN mkdir -p /home/valheim/valheim-server && \
-    chown -R valheim:valheim /home/valheim
+# Verzeichnisse als root anlegen und Rechte an UID 1000 übergeben
+RUN mkdir -p /home/valheim/valheim-server \
+             /home/valheim/.config/unity3d/IronGate/Valheim \
+    && chown -R 1000:1000 /home/valheim
 
-# Copy entrypoint before switching user
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh && \
-    chown valheim:valheim /entrypoint.sh
+RUN chmod +x /entrypoint.sh && chown 1000:1000 /entrypoint.sh
 
-# Switch to non-root user
-USER valheim
+ENV HOME=/home/valheim
+USER 1000:1000
+WORKDIR /home/valheim
 
-# Expose ports
 EXPOSE 2456-2458/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
